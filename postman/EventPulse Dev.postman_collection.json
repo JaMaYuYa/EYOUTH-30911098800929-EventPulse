@@ -1,0 +1,536 @@
+{
+  "info": {
+    "_postman_id": "dcfa89f4-110c-46b8-952a-dbfa0d5fbfcf",
+    "name": "EventPulse Dev",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55897820",
+    "_collection_link": "https://go.postman.co/collection/55897820-dcfa89f4-110c-46b8-952a-dbfa0d5fbfcf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Jane Doe\",\r\n    \"email\": \"jane@example.com\",\r\n    \"password\": \"Password123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/auth/login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"jane@example.com\",\r\n  \"password\": \"Password123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/auth/me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_12fn}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/events",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_17dz}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/6a81e4c437d4e864860c29a7",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "6a81e4c437d4e864860c29a7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{\n  \"title\": \"Tech Conference 2026\",\n  \"date\": \"2026-10-15T10:00:00.000Z\",\n  \"location\": \"Cairo, Egypt\"\n}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Tech Conference 2026\",\r\n  \"date\": \"2026-10-15T10:00:00.000Z\",\r\n  \"location\": \"Cairo, Egypt\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/events/6a81e4c437d4e864860c29a6",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0y8k}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"venue\": \"meccano\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/6a81e4c437d4e864860c29a6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "6a81e4c437d4e864860c29a6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/events/6a81e4c437d4e864860c29a6",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_0y8k}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/6a81e4c437d4e864860c29a6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "6a81e4c437d4e864860c29a6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0gba}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a81e4c437d4e864860c29a9\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/registrations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registrations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0gba}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/registrations/my-registrations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registrations",
+                "my-registrations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0gba}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a81e4c437d4e864860c29a9\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/registrations/6a8d9fe436220c0edff4e300",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registrations",
+                "6a8d9fe436220c0edff4e300"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Announcements",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_0ntq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a81e4c437d4e864860c29a6\",\r\n  \"text\": \"The keynote speech will start in 30 minutes!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/announcements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "announcements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_06f8}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/announcements/6a81e4c437d4e864860c29a6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "announcements",
+                "6a81e4c437d4e864860c29a6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "{{baseUrl}}/announcements/6a8c82cf3549ea1a6c41fd98",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_0ntq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/announcements/6a8c82cf3549ea1a6c41fd98",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "announcements",
+                "6a8c82cf3549ea1a6c41fd98"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "{{baseUrl}}/health",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_17dz",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_17dz",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_06f8",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_0ntq",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_0ntq",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_12fn",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0y8k",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_0y8k",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0gba",
+      "secret": true
+    }
+  ]
+}

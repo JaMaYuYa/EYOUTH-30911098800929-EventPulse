@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EventPulse Live Announcements</title>
+  <!-- Socket.io Client CDN -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: white;
+      background-color: #dc3545;
+      margin-bottom: 20px;
+    }
+    .connected {
+      background-color: #28a745;
+    }
+    .card {
+      border-left: 4px solid #007bff;
+      background: #f8f9fa;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    .sender {
+      font-weight: bold;
+      color: #333;
+    }
+    .time {
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Event Announcements</h2>
+  <div id="status" class="status-badge">Connecting...</div>
+
+  <div id="announcements-container">
+    <p id="empty-state" style="color: #6c757d;">Waiting for real-time announcements...</p>
+  </div>
+
+  <script>
+    // 1. Connect to backend server on port 3000
+    const socket = io('http://localhost:3000', {
+      transports: ['websocket', 'polling']
+    });
+
+    // MUST match the eventId used in Postman
+    const EVENT_ID = '6a81e4c437d4e864860c29a6';
+
+    const statusBadge = document.getElementById('status');
+    const container = document.getElementById('announcements-container');
+
+    // 2. Connection handlers
+    socket.on('connect', () => {
+      console.log('✅ Connected to Socket server! Socket ID:', socket.id);
+      statusBadge.textContent = 'Connected (Room: ' + EVENT_ID + ')';
+      statusBadge.classList.add('connected');
+
+      // Join event room
+      socket.emit('join-event', EVENT_ID);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('❌ Connection failed:', err.message);
+      statusBadge.textContent = 'Connection Error';
+      statusBadge.classList.remove('connected');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('❌ Socket disconnected');
+      statusBadge.textContent = 'Disconnected';
+      statusBadge.classList.remove('connected');
+    });
+
+    // Helper to render incoming messages & prevent duplicates
+    function handleAnnouncement(data) {
+      console.log('📢 Real-time announcement received:', data);
+
+      const id = data._id || data.id;
+      
+      // Prevent rendering the exact same card twice
+      if (id && document.getElementById(`announcement-${id}`)) {
+        return;
+      }
+
+      const emptyState = document.getElementById('empty-state');
+      if (emptyState) {
+        emptyState.remove();
+      }
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (id) {
+        card.id = `announcement-${id}`; // Assign DOM ID for real-time removal
+      }
+      
+      const senderName = data.sender ? (data.sender.name || data.sender) : 'Admin';
+      const text = data.text || data.message || 'No text provided';
+      const formattedTime = new Date(data.createdAt || Date.now()).toLocaleTimeString();
+
+      card.innerHTML = `
+        <div class="sender">${senderName}</div>
+        <p style="margin: 8px 0;">${text}</p>
+        <div class="time">${formattedTime}</div>
+      `;
+
+      // Insert new announcement at the top
+      container.prepend(card);
+    }
+
+    // 3. Listen for creation events
+    socket.on('announcement:created', handleAnnouncement);
+    socket.on('announcement', handleAnnouncement);
+
+    // 4. Listen for real-time deletion events
+    socket.on('announcement:deleted', (data) => {
+      console.log('🗑️ Real-time announcement deleted:', data);
+      const targetId = typeof data === 'object' ? (data.id || data._id) : data;
+      const cardToRemove = document.getElementById(`announcement-${targetId}`);
+      
+      if (cardToRemove) {
+        cardToRemove.remove();
+      }
+    });
+  </script>
+</body>
+</html>
