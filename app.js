@@ -41,7 +41,18 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// NoSQL Injection Sanitization (Safely strips $ operators without dropping keys)
+// Serverless DB Connection Middleware (Ensures MongoDB is connected before routes execute on Vercel)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Database connection failed during request:', err.message);
+    res.status(500).json({ status: 'error', message: 'Database connection failure' });
+  }
+});
+
+// NoSQL Injection Sanitization
 const sanitize = (obj) => {
   if (!obj || typeof obj !== 'object') return;
   for (const key in obj) {
@@ -60,7 +71,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 4. Socket.io Event Listeners
+// 4. Socket.io Event Listeners (Active in local server mode)
 io.on('connection', (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
@@ -121,13 +132,13 @@ const swaggerUiOptions = {
   customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui.min.css',
   customJs: [
     'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-bundle.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js'
-  ]
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js',
+  ],
 };
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, swaggerUiOptions));
 
-// 6. Health Check Endpoints (Available on both /health and /api/health)
+// 6. Health Check Endpoints
 const healthHandler = (req, res) => {
   const dbState = mongoose.connection.readyState;
   const dbStatusMap = {
@@ -182,9 +193,6 @@ if (require.main === module) {
   }
 
   start();
-} else {
-  // Connect to DB asynchronously for Vercel/Serverless invocations
-  connectDB().catch((err) => console.error('Database pre-connection warning:', err.message));
 }
 
 module.exports = app;

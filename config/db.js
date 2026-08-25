@@ -1,21 +1,24 @@
 const mongoose = require('mongoose');
 
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected || mongoose.connection.readyState >= 1) {
+    isConnected = true;
+    return;
+  }
+
   try {
-    // 🔍 Debug log: Print the URI (masking password) to verify formatting
-    const maskedUri = process.env.MONGO_URI ? process.env.MONGO_URI.replace(/:([^@]+)@/, ':****@') : 'UNDEFINED';
-    console.log('🔗 Attempting connection with URI:', maskedUri);
+    const db = await mongoose.connect(process.env.MONGO_URI, {
+      bufferCommands: false, // Prevents queries from hanging when DB isn't connected yet
+      serverSelectionTimeoutMS: 5000, // Fails fast (5s) instead of timing out Vercel
+    });
 
-    if (!process.env.MONGO_URI) {
-      throw new Error('MONGO_URI is missing from environment variables');
-    }
-
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    return conn;
-  } catch (error) {
-    console.error(`❌ Database Connection Error: ${error.message}`);
-    process.exit(1);
+    isConnected = db.connections[0].readyState === 1;
+    console.log('MongoDB Connected successfully');
+  } catch (err) {
+    console.error('MongoDB Connection Error:', err.message);
+    throw err;
   }
 };
 
