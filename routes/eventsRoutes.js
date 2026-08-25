@@ -117,10 +117,6 @@ router.post('/', requireAuth, requireRole('admin'), createEventValidation, valid
  *             properties:
  *               title:
  *                 type: string
- *               date:
- *                 type: string
- *               location:
- *                 type: string
  *     responses:
  *       200:
  *         description: Event updated successfully
