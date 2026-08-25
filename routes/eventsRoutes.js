@@ -28,20 +28,48 @@ const ctrl = require('../controllers/eventsController');
  *             required:
  *               - title
  *               - date
- *               - location
+ *               - venue
+ *               - city
+ *               - category
+ *               - capacity
  *             properties:
  *               title:
  *                 type: string
  *                 example: Tech Conference 2026
+ *               description:
+ *                 type: string
+ *                 example: Annual tech community gathering
  *               date:
  *                 type: string
  *                 example: 2026-10-15T10:00:00.000Z
  *               location:
  *                 type: string
  *                 example: Cairo, Egypt
+ *               venue:
+ *                 type: string
+ *                 example: Grand Hall Center
+ *               city:
+ *                 type: string
+ *                 example: Cairo
+ *               category:
+ *                 type: string
+ *                 description: Valid MongoDB ObjectId for category
+ *                 example: 66b1234567890123456789ab
+ *               organizer:
+ *                 type: string
+ *                 description: Valid MongoDB ObjectId for admin user
+ *                 example: 66b1234567890123456789cd
+ *               capacity:
+ *                 type: integer
+ *                 example: 100
+ *               ticketPrice:
+ *                 type: number
+ *                 example: 0
  *     responses:
  *       201:
  *         description: Event created successfully
+ *       400:
+ *         description: Validation error or missing required fields
  *       401:
  *         description: Unauthorized - Missing or invalid token
  *       403:
