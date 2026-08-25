@@ -28,7 +28,8 @@ EventPulse is a full-featured backend API for managing public and private events
 
 1. **Clone the Repository:**
    ```bash
-   git clone
+   git clone https://github.com/YOUR_GITHUB_USERNAME/EYOUTH-30911098800929-EventPulse.git
+   cd EYOUTH-30911098800929-EventPulse
    ```
 
 2. **Install Dependencies:**
@@ -37,12 +38,12 @@ EventPulse is a full-featured backend API for managing public and private events
    ```
 
 3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory and add your credentials:
    ```env
-   PORT=5000
+   PORT=3000
    NODE_ENV=development
-   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.XXXXX.mongodb.net/eventpulse?authSource=admin&retryWrites=true&w=majority
-   JWT_SECRET=your_secret_jwt
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.XXXXX.mongodb.net/eventpulse?retryWrites=true&w=majority
+   JWT_SECRET=your_super_secret_jwt_key
    ```
 
 4. **Seed the Database:**
@@ -54,8 +55,7 @@ EventPulse is a full-featured backend API for managing public and private events
    ```bash
    npm run dev
    ```
-   * Access API locally at: `http://localhost:3000`
-   * Access Interactive Swagger Docs at: `http://localhost:3000/api-docs`
+   * **API Base URL:** `http://localhost:3000`
 
 ---
 
@@ -64,27 +64,23 @@ EventPulse is a full-featured backend API for managing public and private events
 | Method | Endpoint Path | Description | Access |
 | :--- | :--- | :--- | :--- |
 | **GET** | `/health` | Service health & system status check | Public |
-| **POST** | `/auth/register` | Register a new user account | Public |
-| **POST** | `/auth/login` | Authenticate user and issue JWT | Public |
-| **GETT** | `/auth/me` | Get currently logged-in user profile | Public |
+| **POST** | `/api/auth/register` | Register a new user account | Public |
+| **POST** | `/api/auth/login` | Authenticate user and issue JWT | Public |
+| **GET** | `/api/auth/me` | Get currently logged-in user profile | Authenticated User |
+| **GET** | `/api/events` | List all upcoming events (Paginated/Filtered) | Public |
+| **POST** | `/api/events` | Create a new event | Admin / Organizer |
+| **GET** | `/api/events/:id` | Fetch specific event details | Public |
+| **PATCH** | `/api/events/:id` | Update event information | Admin / Organizer |
+| **DELETE** | `/api/events/:id` | Delete an event | Admin / Organizer |
+| **POST** | `/api/registrations` | Register user for an event | Authenticated User |
+| **GET** | `/api/registrations/my-registrations` | View user's event registrations | Authenticated User |
+| **POST** | `/api/announcements` | Broadcast real-time announcement (Socket.io) | Admin / Organizer |
+| **GET** | `/api/announcements` | Get all announcements | Public / Organizer |
+| **DELETE** | `/api/announcements/:id` | Delete an announcement | Admin / Organizer |
 
-| **GET** | `/events` | List all upcoming events (Paginated/Filtered) | Public |
-| **POST** | `/events` | Create a new event | Admin / Organizer |
-| **GET** | `/events/:id` | Fetch specific event details | Public |
-| **PATCH** | `/events/:id` | Update event information | Admin / Organizer |
-| **DELETE** | `/events/:id` | Delete an event | Admin / Organizer |
-
-| **POST** | `/registrations` | Register user for an event | Authenticated User |
-| **GET** | `/registrations/my-registrations` | View user's event registrations | Authenticated User |
-
-| **POST** | `/announcements` | Broadcast real-time announcement (Socket.io) | Admin / Organizer |
-| **GET** | `/announcements` | Get all announcements | public / Organizer |
-| **DELETE** | `/announcements/:id` |Delete an announcement | Admin / Organizer |
 ---
 
 ## 🌐 Live Deployment & Interactive Docs
 
-* **Live API Health Check:** [https://eyouth-30911098800929-event-pulse.vercel.app/health]
-* **Interactive Swagger Documentation:** [https://eyouth-30911098800929-event-pulse.vercel.app/api-docs/#/]
-
----
+* **Live API Health Check:** https://eyouth-30911098800929-event-pulse-y.vercel.app/health
+* **Interactive Swagger Documentation:** https://eyouth-30911098800929-event-pulse-y.vercel.app/api-docs/
