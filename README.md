@@ -28,7 +28,7 @@ EventPulse is a full-featured backend API for managing public and private events
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/EYOUTH-30911098800929-EventPulse.git
+   git clone https://github.com/JaMaYuYa/EYOUTH-30911098800929-EventPulse.git
    cd EYOUTH-30911098800929-EventPulse
    ```
 
