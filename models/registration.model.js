@@ -5,13 +5,13 @@ const registrationSchema = new mongoose.Schema(
     event: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Event',
-      required: true
+      required: [true, 'Registration must be linked to an event'],
     },
     attendee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true
-    }
+      required: [true, 'Registration must be linked to an attendee user'],
+    },
   },
   { timestamps: true }
 );

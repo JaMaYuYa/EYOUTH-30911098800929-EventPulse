@@ -1,18 +1,24 @@
 const mongoose = require('mongoose');
 
-// models/Announcement.js
-const announcementSchema = new mongoose.Schema({
-  eventId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true
+const announcementSchema = new mongoose.Schema(
+  {
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: [true, 'Announcement must be linked to an event ID'],
+    },
+    text: {
+      type: String,
+      required: [true, 'Announcement text is required'],
+      trim: true,
+    },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Announcement must have a sender'],
+    },
   },
-  text: String,
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-}, { timestamps: true });
-
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('Announcement', announcementSchema);

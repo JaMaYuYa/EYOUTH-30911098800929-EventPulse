@@ -106,12 +106,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/events",
+              "raw": "{{baseUrl}}/events{\n  \"title\": \"Tech Conference 2026\",\n  \"description\": \"Annual tech community gathering\",\n  \"date\": \"2026-10-15T10:00:00.000Z\",\n  \"location\": \"Cairo, Egypt\",\n  \"venue\": \"Grand Hall Center\",\n  \"city\": \"Cairo\",\n  \"category\": \"66b1234567890123456789ab\",\n  \"organizer\": \"66b1234567890123456789cd\",\n  \"capacity\": 100,\n  \"ticketPrice\": 0\n}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "events"
+                "events{\n  \"title\": \"Tech Conference 2026\",\n  \"description\": \"Annual tech community gathering\",\n  \"date\": \"2026-10-15T10:00:00.000Z\",\n  \"location\": \"Cairo, Egypt\",\n  \"venue\": \"Grand Hall Center\",\n  \"city\": \"Cairo\",\n  \"category\": \"66b1234567890123456789ab\",\n  \"organizer\": \"66b1234567890123456789cd\",\n  \"capacity\": 100,\n  \"ticketPrice\": 0\n}"
               ]
             }
           },
@@ -145,13 +145,18 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/events/6a81e4c437d4e864860c29a7",
+              "raw": "{{baseUrl}}/events?sortBy=registrations",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "events",
-                "6a81e4c437d4e864860c29a7"
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "registrations"
+                }
               ]
             }
           },
@@ -165,7 +170,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{\n  \"title\": \"Tech Conference 2026\",\n  \"date\": \"2026-10-15T10:00:00.000Z\",\n  \"location\": \"Cairo, Egypt\"\n}",
+                  "value": "{{json_web_token_0jg8}}",
                   "type": "string"
                 }
               ]
@@ -174,7 +179,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"title\": \"Tech Conference 2026\",\r\n  \"date\": \"2026-10-15T10:00:00.000Z\",\r\n  \"location\": \"Cairo, Egypt\"\r\n}",
+              "raw": "{\r\n  \"title\": \"Tech Conference 2026\",\r\n  \"description\": \"Annual tech community gathering\",\r\n  \"date\": \"2026-10-15T10:00:00.000Z\",\r\n  \"location\": \"Cairo, Egypt\",\r\n  \"venue\": \"Grand Hall Center\",\r\n  \"city\": \"Cairo\",\r\n  \"category\": \"66b1234567890123456789ab\",\r\n  \"organizer\": \"66b1234567890123456789cd\",\r\n  \"capacity\": 100,\r\n  \"ticketPrice\": 0\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -210,7 +215,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"venue\": \"meccano\"\r\n}",
+              "raw": "{\r\n    \"venue\": \"local library\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -218,13 +223,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/events/6a81e4c437d4e864860c29a6",
+              "raw": "{{baseUrl}}/events/6a8d9afbc5629998151a1334",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "events",
-                "6a81e4c437d4e864860c29a6"
+                "6a8d9afbc5629998151a1334"
               ]
             }
           },
@@ -530,6 +535,10 @@
     },
     {
       "key": "json_web_token_0gba",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0jg8",
       "secret": true
     }
   ]

@@ -1,5 +1,6 @@
 const Event = require('../models/event.model.js');
-require('../models/category.model.js'); // Prevents MissingSchemaError
+const Registration = require('../models/registration.model.js');
+const Category = require('../models/category.model.js'); // Import existing model
 require('../models/user.model.js');     // Prevents MissingSchemaError
 
 const AppError = require('../utils/AppError');
@@ -38,18 +39,43 @@ exports.getEvents = asyncHandler(async (req, res, next) => {
   const allowedSortFields = ['date', 'registrations'];
   const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'date';
   const sortDirection = order === 'desc' ? -1 : 1;
-  const sort = { [sortField]: sortDirection };
+
+  let data;
 
   // 5. Query Execution
-  const [data, total] = await Promise.all([
-    Event.find(filter)
-      .populate('category')
-      .sort(sort)
-      .skip(skip)
-      .limit(limitNum),
-    Event.countDocuments(filter),
-  ]);
+  if (sortField === 'registrations') {
+    data = await Event.aggregate([
+      { $match: filter },
+      {
+        $lookup: {
+          from: 'registrations',
+          localField: '_id',
+          foreignField: 'event',
+          as: 'registrationList',
+        },
+      },
+      {
+        $addFields: {
+          registrationCount: { $size: '$registrationList' },
+        },
+      },
+      { $project: { registrationList: 0 } },
+      { $sort: { registrationCount: sortDirection } },
+      { $skip: skip },
+      { $limit: limitNum },
+    ]);
 
+    // Populate category on aggregated results
+    await Event.populate(data, { path: 'category' });
+  } else {
+    data = await Event.find(filter)
+      .populate('category')
+      .sort({ [sortField]: sortDirection })
+      .skip(skip)
+      .limit(limitNum);
+  }
+
+  const total = await Event.countDocuments(filter);
   const totalPages = Math.ceil(total / limitNum);
 
   // 6. Response Shape
@@ -81,7 +107,24 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
 
 // POST /api/events - Create new event (Admin only)
 exports.createEvent = asyncHandler(async (req, res, next) => {
-  const event = await Event.create(req.body);
+  // 1. Check if category exists before saving
+  if (req.body.category) {
+    const categoryExists = await Category.exists({ _id: req.body.category });
+    if (!categoryExists) {
+      return next(new AppError('No category found with that ID', 404));
+    }
+  }
+
+  // 2. Create the event
+  const eventData = {
+    ...req.body,
+    organizer: req.body.organizer || (req.user ? req.user._id : undefined),
+  };
+
+  const newEvent = await Event.create(eventData);
+
+  // 3. Return event with populated category
+  const event = await Event.findById(newEvent._id).populate('category');
 
   res.status(201).json({
     status: 'success',
@@ -91,10 +134,17 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
 
 // PATCH /api/events/:id - Update event (Admin only)
 exports.updateEvent = asyncHandler(async (req, res, next) => {
+  if (req.body.category) {
+    const categoryExists = await Category.exists({ _id: req.body.category });
+    if (!categoryExists) {
+      return next(new AppError('No category found with that ID', 404));
+    }
+  }
+
   const event = await Event.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
-  });
+  }).populate('category');
 
   if (!event) {
     return next(new AppError('Event not found', 404));
@@ -113,6 +163,8 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
   if (!event) {
     return next(new AppError('Event not found', 404));
   }
+
+  await Registration.deleteMany({ event: req.params.id });
 
   res.status(200).json({
     status: 'success',
